@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.work.mapper.New1Mapper">
+    
+    <resultMap type="New1" id="New1Result">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="creatime"    column="creatime"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+    
+<select id="selectNew1Page" resultType="com.ruoyi.work.domain.New1">
+    SELECT * FROM new1
+    where status = 1
+    order by creatime desc
+</select>
+
+
+
+
+
+
+
+
+</mapper>

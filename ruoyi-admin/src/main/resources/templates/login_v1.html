@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>登录系统</title>
+    <link rel="stylesheet" th:href="@{/js/layui/css/layui.css}" />
+    <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+    <link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
+    <link href="../static/css/login.min.css" th:href="@{/css/login.min.css}" rel="stylesheet"/>
+    <link href="../static/ruoyi/css/ry-ui.css" th:href="@{/ruoyi/css/ry-ui.css?v=4.6.0}" rel="stylesheet"/>
+    <!-- 360浏览器急速模式 -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="../static/favicon.ico" th:href="@{favicon.ico}"/>
+    <style type="text/css">label.error { position:inherit; right: 0; }</style>
+    <script>
+        if(window.top!==window.self){alert('未登录或登录超时。请重新登录');window.top.location=window.location};
+    </script>
+</head>
+<body>
+<div class="login-wrapper">
+    <form id="signupForm" class="layui-form">
+        <h2>用户登录</h2>
+        <div class="layui-form-item layui-input-icon-group">
+            <i class="layui-icon layui-icon-username"></i>
+            <input class="layui-input" id="username" name="username" placeholder="请输入登录账号" value="admin" autocomplete="off" lay-verType="tips" lay-verify="required" required/>
+        </div>
+        <div class="layui-form-item layui-input-icon-group">
+            <i class="layui-icon layui-icon-password"></i>
+            <input class="layui-input" id="password" name="password" placeholder="请输入登录密码" value="admin123" type="password" lay-verType="tips" lay-verify="required" required/>
+        </div>
+        <div th:if="${captchaEnabled==true}" class="layui-form-item layui-input-icon-group login-captcha-group">
+            <i class="layui-icon layui-icon-auz"></i>
+            <label for="kaptcha"></label><input name="validateCode" class="layui-input" id="kaptcha" placeholder="请输入验证码" autocomplete="off" lay-verType="tips" lay-verify="required" required/>
+            <img class="imgcode login-captcha" th:src="@{captcha/captchaImage(type=${captchaType})}" alt=""/>
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn layui-btn-fluid" id="btnSubmit" data-loading="正在验证登录，请稍后...">登录</button>
+        </div>
+    </form>
+</div>
+<div class="login-copyright">copyright © 2020 stylefeng.cn all rights reserved.</div>
+<style>
+    body {
+        background-image: url("img/bg-login.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        min-height: 100vh;
+    }
+
+    body:before {
+        content: "";
+        background-color: rgba(0, 0, 0, .2);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .login-wrapper {
+        max-width: 420px;
+        padding: 20px;
+        margin: 0 auto;
+        position: relative;
+        box-sizing: border-box;
+        z-index: 2;
+    }
+
+    .login-wrapper > .layui-form {
+        padding: 25px 30px;
+        background-color: #fff;
+        box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.19);
+        box-sizing: border-box;
+        border-radius: 4px;
+    }
+
+    .login-wrapper > .layui-form > h2 {
+        color: #333;
+        font-size: 18px;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .login-wrapper > .layui-form > .layui-form-item {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .login-wrapper > .layui-form > .layui-form-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .login-wrapper > .layui-form > .layui-form-item > .layui-input {
+        height: 46px;
+        line-height: 46px;
+        border-radius: 2px !important;
+    }
+
+    .login-wrapper .layui-input-icon-group > .layui-input {
+        padding-left: 46px;
+    }
+
+    .login-wrapper .layui-input-icon-group > .layui-icon {
+        width: 46px;
+        height: 46px;
+        line-height: 46px;
+        font-size: 20px;
+        color: #909399;
+        position: absolute;
+        left: 0;
+        top: 0;
+        text-align: center;
+    }
+
+    .login-wrapper > .layui-form > .layui-form-item.login-captcha-group {
+        padding-right: 135px;
+    }
+
+    .login-wrapper > .layui-form > .layui-form-item.login-captcha-group > .login-captcha {
+        height: 46px;
+        width: 120px;
+        cursor: pointer;
+        box-sizing: border-box;
+        border: 1px solid #e6e6e6;
+        border-radius: 2px !important;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .login-wrapper > .layui-form > .layui-form-item > .layui-form-checkbox {
+        margin: 0 !important;
+        padding-left: 25px;
+    }
+
+    .login-wrapper > .layui-form > .layui-form-item > .layui-form-checkbox > .layui-icon {
+        width: 15px !important;
+        height: 15px !important;
+    }
+
+    .login-wrapper > .layui-form .layui-btn-fluid {
+        height: 48px;
+        line-height: 48px;
+        font-size: 16px;
+        border-radius: 2px !important;
+    }
+
+    .login-wrapper > .layui-form > .layui-form-item.login-oauth-group > a > .layui-icon {
+        font-size: 26px;
+    }
+
+    .login-copyright {
+        color: #eee;
+        padding-bottom: 20px;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    @media screen and (min-height: 550px) {
+        .login-wrapper {
+            margin: -250px auto 0;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
+
+        .login-copyright {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            left: 0;
+        }
+    }
+
+    .layui-btn {
+        background-color: #5FB878;
+        border-color: #5FB878;
+    }
+
+    .layui-link {
+        color: #5FB878 !important;
+    }
+</style>
+<script th:inline="javascript"> var ctx = [[@{/}]]; var captchaType = [[${captchaType}]]; </script>
+<!-- 全局js -->
+<script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+<script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<!-- 验证插件 -->
+<script src="../static/ajax/libs/validate/jquery.validate.min.js" th:src="@{/ajax/libs/validate/jquery.validate.min.js}"></script>
+<script src="../static/ajax/libs/layer/layer.min.js" th:src="@{/ajax/libs/layer/layer.min.js}"></script>
+<script src="../static/ajax/libs/blockUI/jquery.blockUI.js" th:src="@{/ajax/libs/blockUI/jquery.blockUI.js}"></script>
+<script src="../static/ruoyi/js/ry-ui.js" th:src="@{/ruoyi/js/ry-ui.js?v=4.6.0}"></script>
+<script src="../static/ruoyi/login.js" th:src="@{/ruoyi/login.js}"></script>
+</body>
+</html>
