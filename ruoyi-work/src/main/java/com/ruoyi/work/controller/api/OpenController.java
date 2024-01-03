@@ -223,7 +223,7 @@ private INewsService newsService;
     @ApiOperation("经典案例")
     public Result Cases(Cases cases){
         Page<Cases> page = new Page<>(1,SIZE1);
-        IPage<Cases> casesIPageIPage = casesService.selectCagitsesPage(page,cases);
+        IPage<Cases> casesIPageIPage = casesService.selectCasesPage(page,cases);
         return Result.success(casesIPageIPage);
     }
 
